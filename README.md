@@ -25,6 +25,11 @@
 2. <b>User Friendly</b>: It offers a context menu available everywhere, dozens of keyboard shortcuts, and countless editing detail optimizations, striving to replicate a desktop application-level experience.
 3. <b>Feature Rich</b>: Supports most of the commonly used elements and functionalities found in PowerPoint, supports generate PPT by AI, supports exporting in various formats, and offers basic editing and previewing on mobile devices.
 
+# 👀 Front-Row Reminder
+1. This project is a "Web Slideshow Application", not a "low-code platform", "H5 editor", "image editor", "whiteboard application", or similar tools.
+2. The target audience for this project is <b>developers with needs for [Web slideshow] development</b>. The provided link is merely a demo address and does not offer any online services. You should not use this project directly as a tool, nor does it support out-of-the-box functionality. If you simply need a service or tool, you can opt for more excellent and mature products such as: [Slidev](https://sli.dev/)、[revealjs](https://revealjs.com/), etc.
+3. Here are some summarized [Frequently Asked Questions](/doc/Q&A.md). When raising Issues or submitting PRs for the first time, be sure to read this document in advance.
+
 
 # 🚀 Installation
 ```
@@ -200,14 +205,16 @@ If you wish to use this project for commercial gain, I hope you will respect ope
         - 你给本项目提交过重要的 PR 并且被合并（由作者主观判断）；
         - 你长期参与到本项目的维护/推进工作中，如为本项目：提供了有效的周边工具、制作了大量模板等（由作者主观判断）；
     3. [邮件联系作者](mailto:pipipi_pikachu@163.com)付费获取独立的商业授权。独立授权价格：
-        - 一年1999（2599可开具电子发票）
-        - 三年2999（3999可开具电子发票）
-        - 永久5499（7499可开具电子发票）
-- 如需付费获取独立的商业授权，请注意：
+        - 一年1999元
+        - 三年2999元
+        - 永久5499元
+- 建议优先考虑执行AGPL-3.0 协议，如考虑付费获取独立的商业授权，还请注意：
     - 独立商业授权的意思是：单独授权您将代码用于商业行为，且不必执行 AGPL-3.0 协议；
-    - 不提供额外的“高级版本”和技术支持，也不提供可直接交付的产品；
-    - 如有需要，可提供AIPPT相关后台逻辑和当前模板数据（但都非常简单，建议自己实现）；
-    - 务必提前做好调研，判断PPTist是否符合需求（无论功能还是开发）。
+    - 仅授权，不存在其他“高级版本/付费版本”、不提供任何在线服务、不提供技术支持或技术咨询、不包含定制开发、不提供更多模板、更不提供可直接交付的产品；
+    - 授权后，仍禁止将源代码二次售卖、授权、开源或恶意传播。
+    - 授权后，如有需要可提供AIPPT相关后台逻辑和当前模板数据以供参考（但都非常简单，无任何核心逻辑，更建议自己实现）；
+    - 请务必提前做好调研，判断PPTist是否符合需求，无论是功能（是否能满足业务需求）还是开发（是否接受当前技术栈/实现方案）；
+    - 作者是异步沟通践行者，非必要不加微信，有疑问请邮件联系，谢谢理解。
 
 ---
 # 🔔 其他说明
