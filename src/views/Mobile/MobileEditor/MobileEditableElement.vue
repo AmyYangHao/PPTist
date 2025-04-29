@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="mobile-editable-element"
     :style="{
       zIndex: elementIndex,
@@ -15,24 +15,29 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { ElementTypes, type PPTElement } from '@/types/slides'
+import { computed } from "vue";
+import { ElementTypes, type PPTElement } from "@/types/slides";
 
-import ImageElement from '@/views/components/element/ImageElement/index.vue'
-import TextElement from '@/views/components/element/TextElement/index.vue'
-import ShapeElement from '@/views/components/element/ShapeElement/index.vue'
-import LineElement from '@/views/components/element/LineElement/index.vue'
-import ChartElement from '@/views/components/element/ChartElement/index.vue'
-import TableElement from '@/views/components/element/TableElement/index.vue'
-import LatexElement from '@/views/components/element/LatexElement/index.vue'
-import VideoElement from '@/views/components/element/VideoElement/index.vue'
-import AudioElement from '@/views/components/element/AudioElement/index.vue'
+import ImageElement from "@/views/components/element/ImageElement/index.vue";
+import TextElement from "@/views/components/element/TextElement/index.vue";
+import ShapeElement from "@/views/components/element/ShapeElement/index.vue";
+import LineElement from "@/views/components/element/LineElement/index.vue";
+import ChartElement from "@/views/components/element/ChartElement/index.vue";
+import TableElement from "@/views/components/element/TableElement/index.vue";
+import LatexElement from "@/views/components/element/LatexElement/index.vue";
+import VideoElement from "@/views/components/element/VideoElement/index.vue";
+import AudioElement from "@/views/components/element/AudioElement/index.vue";
+import FrameElement from "@/views/components/element/FrameElement/FrameElementScreen.vue";
 
 const props = defineProps<{
-  elementInfo: PPTElement
-  elementIndex: number
-  selectElement: (e: TouchEvent, element: PPTElement, canMove?: boolean) => void
-}>()
+  elementInfo: PPTElement;
+  elementIndex: number;
+  selectElement: (
+    e: TouchEvent,
+    element: PPTElement,
+    canMove?: boolean
+  ) => void;
+}>();
 
 const currentElementComponent = computed<unknown>(() => {
   const elementTypeMap = {
@@ -45,7 +50,8 @@ const currentElementComponent = computed<unknown>(() => {
     [ElementTypes.LATEX]: LatexElement,
     [ElementTypes.VIDEO]: VideoElement,
     [ElementTypes.AUDIO]: AudioElement,
-  }
-  return elementTypeMap[props.elementInfo.type] || null
-})
+    [ElementTypes.FRAME]: FrameElement,
+  };
+  return elementTypeMap[props.elementInfo.type] || null;
+});
 </script>

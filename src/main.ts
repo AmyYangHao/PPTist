@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
-
+import ElementPlus from "element-plus";
+import "element-plus/dist/index.css";
 import '@icon-park/vue-next/styles/index.css'
 import 'prosemirror-view/style/prosemirror.css'
 import 'animate.css'
@@ -13,6 +14,7 @@ import Icon from '@/plugins/icon'
 import Directive from '@/plugins/directive'
 
 const app = createApp(App)
+app.use(ElementPlus);
 app.use(Icon)
 app.use(Directive)
 app.use(createPinia())

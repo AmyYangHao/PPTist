@@ -36,7 +36,7 @@ export default () => {
   const { addHistorySnapshot } = useHistorySnapshot()
 
   // 创建（插入）一个元素并将其设置为被选中元素
-  const createElement = (element: PPTElement, callback?: () => void) => {
+  const createElement = (element: any, callback?: any) => {
     slidesStore.addElement(element)
     mainStore.setActiveElementIdList([element.id])
 
@@ -46,7 +46,7 @@ export default () => {
       mainStore.setEditorareaFocus(true)
     }, 0)
 
-    if (callback) callback()
+    if (callback) callback(element.id)
 
     addHistorySnapshot()
   }
@@ -58,7 +58,7 @@ export default () => {
   const createImageElement = (src: string) => {
     getImageSize(src).then(({ width, height }) => {
       const scale = height / width
-  
+
       if (scale < viewportRatio.value && width > viewportSize.value) {
         width = viewportSize.value
         height = width * scale
@@ -81,7 +81,7 @@ export default () => {
       })
     })
   }
-  
+
   /**
    * 创建图表元素
    * @param chartType 图表类型
@@ -101,7 +101,7 @@ export default () => {
       data: CHART_DEFAULT_DATA[type],
     })
   }
-  
+
   /**
    * 创建表格元素
    * @param row 行数
@@ -154,7 +154,7 @@ export default () => {
       cellMinHeight: 36,
     })
   }
-  
+
   /**
    * 创建文本元素
    * @param position 位置大小信息
@@ -169,9 +169,9 @@ export default () => {
     createElement({
       type: 'text',
       id,
-      left, 
-      top, 
-      width, 
+      left,
+      top,
+      width,
       height,
       content,
       rotate: 0,
@@ -185,7 +185,7 @@ export default () => {
       }, 0)
     })
   }
-  
+
   /**
    * 创建形状元素
    * @param position 位置大小信息
@@ -196,9 +196,9 @@ export default () => {
     const newElement: PPTShapeElement = {
       type: 'shape',
       id: nanoid(10),
-      left, 
-      top, 
-      width, 
+      left,
+      top,
+      width,
       height,
       viewBox: data.viewBox,
       path: data.path,
@@ -222,7 +222,7 @@ export default () => {
     }
     createElement(newElement)
   }
-  
+
   /**
    * 创建线条元素
    * @param position 位置大小信息
@@ -234,8 +234,8 @@ export default () => {
     const newElement: PPTLineElement = {
       type: 'line',
       id: nanoid(10),
-      left, 
-      top, 
+      left,
+      top,
       start,
       end,
       points: data.points,
@@ -249,7 +249,7 @@ export default () => {
     if (data.isCubic) newElement.cubic = [[(start[0] + end[0]) / 2, (start[1] + end[1]) / 2], [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]]
     createElement(newElement)
   }
-  
+
   /**
    * 创建LaTeX元素
    * @param svg SVG代码
@@ -271,7 +271,7 @@ export default () => {
       fixedRatio: true,
     })
   }
-  
+
   /**
    * 创建视频元素
    * @param src 视频地址
@@ -289,7 +289,7 @@ export default () => {
       autoplay: false,
     })
   }
-  
+
   /**
    * 创建音频元素
    * @param src 音频地址
@@ -310,6 +310,25 @@ export default () => {
       src,
     })
   }
+  /**
+   * 创建网页元素
+   * @param url 网页地址
+   */
+  const createFrameElement = (src: string, callback?: () => void) => {
+    createElement(
+      {
+        type: "iframe",
+        id: nanoid(10),
+        width: 1000,
+        height: 1000 * viewportRatio.value,
+        rotate: 0,
+        left: 0,
+        top: 0,
+        src,
+      },
+      callback
+    );
+  };
 
   return {
     createImageElement,
@@ -321,5 +340,6 @@ export default () => {
     createLatexElement,
     createVideoElement,
     createAudioElement,
+    createFrameElement
   }
 }

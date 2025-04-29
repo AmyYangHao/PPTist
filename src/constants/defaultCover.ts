@@ -1,0 +1,1 @@
+export const defaultCover = '/media/picture/default_cover.png'

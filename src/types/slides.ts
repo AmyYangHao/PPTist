@@ -30,6 +30,7 @@ export const enum ElementTypes {
   LATEX = 'latex',
   VIDEO = 'video',
   AUDIO = 'audio',
+  FRAME = "iframe",
 }
 
 /**
@@ -289,7 +290,7 @@ export interface PPTImageElement extends PPTBaseElement {
   imageType?: ImageType
 }
 
-export type ShapeTextAlign = 'top' | 'middle' | 'bottom' 
+export type ShapeTextAlign = 'top' | 'middle' | 'bottom'
 
 /**
  * 形状内文本
@@ -369,7 +370,7 @@ export interface PPTShapeElement extends PPTBaseElement {
 }
 
 
-export type LinePoint = '' | 'arrow' | 'dot' 
+export type LinePoint = '' | 'arrow' | 'dot'
 
 /**
  * 线条元素

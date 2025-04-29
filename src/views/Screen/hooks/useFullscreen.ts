@@ -19,6 +19,18 @@ export default () => {
     fullscreenState.value = isFullscreen()
     document.addEventListener('fullscreenchange', handleFullscreenChange)
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange) // Safari 兼容
+    window.onmessage = (event) => {
+      if (
+        event.data.info === 'integration' &&
+        event.data.type === 'exitFullscreen'
+      ) {
+        const docElm: any = document.documentElement
+        if (docElm.exitFullscreen) docElm.exitFullscreen()
+        else if (docElm.mozCancelFullScreen) docElm.mozCancelFullScreen()
+        else if (docElm.webkitExitFullscreen) docElm.webkitExitFullscreen()
+        else if (docElm.msExitFullscreen) docElm.msExitFullscreen()
+      }
+    }
   })
   onUnmounted(() => {
     document.removeEventListener('fullscreenchange', handleFullscreenChange)

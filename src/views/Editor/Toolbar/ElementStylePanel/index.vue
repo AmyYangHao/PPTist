@@ -5,20 +5,21 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useMainStore } from '@/store'
-import { ElementTypes } from '@/types/slides'
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useMainStore } from "@/store";
+import { ElementTypes } from "@/types/slides";
 
-import TextStylePanel from './TextStylePanel.vue'
-import ImageStylePanel from './ImageStylePanel.vue'
-import ShapeStylePanel from './ShapeStylePanel.vue'
-import LineStylePanel from './LineStylePanel.vue'
-import ChartStylePanel from './ChartStylePanel/index.vue'
-import TableStylePanel from './TableStylePanel.vue'
-import LatexStylePanel from './LatexStylePanel.vue'
-import VideoStylePanel from './VideoStylePanel.vue'
-import AudioStylePanel from './AudioStylePanel.vue'
+import TextStylePanel from "./TextStylePanel.vue";
+import ImageStylePanel from "./ImageStylePanel.vue";
+import ShapeStylePanel from "./ShapeStylePanel.vue";
+import LineStylePanel from "./LineStylePanel.vue";
+import ChartStylePanel from "./ChartStylePanel/index.vue";
+import TableStylePanel from "./TableStylePanel.vue";
+import LatexStylePanel from "./LatexStylePanel.vue";
+import VideoStylePanel from "./VideoStylePanel.vue";
+import AudioStylePanel from "./AudioStylePanel.vue";
+import FrameStylePanel from "./FrameStylePanel.vue";
 
 const panelMap = {
   [ElementTypes.TEXT]: TextStylePanel,
@@ -30,11 +31,14 @@ const panelMap = {
   [ElementTypes.LATEX]: LatexStylePanel,
   [ElementTypes.VIDEO]: VideoStylePanel,
   [ElementTypes.AUDIO]: AudioStylePanel,
-}
+  [ElementTypes.FRAME]: FrameStylePanel,
+};
 
-const { handleElement } = storeToRefs(useMainStore())
+const { handleElement } = storeToRefs(useMainStore());
 
 const currentPanelComponent = computed<unknown>(() => {
-  return handleElement.value ? (panelMap[handleElement.value.type] || null) : null
-})
+  return handleElement.value
+    ? panelMap[handleElement.value.type] || null
+    : null;
+});
 </script>

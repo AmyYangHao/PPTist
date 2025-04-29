@@ -2,6 +2,7 @@
 
 import type { App } from 'vue'
 import {
+  Save,
   PlayOne,
   FullScreenPlay,
   Lock,
@@ -127,6 +128,7 @@ import {
   User,
   Switch,
   More,
+  FolderMusic,
 } from '@icon-park/vue-next'
 
 export interface Icons {
@@ -134,6 +136,8 @@ export interface Icons {
 }
 
 export const icons: Icons = {
+  IconSave: Save,
+  IconFolderMusic: FolderMusic,
   IconPlayOne: PlayOne,
   IconFullScreenPlay: FullScreenPlay,
   IconLock: Lock,
