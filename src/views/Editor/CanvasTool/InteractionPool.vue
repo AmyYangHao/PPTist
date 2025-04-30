@@ -85,6 +85,8 @@ const clickHandle = (key: string) => {
       host += "/ppt/custom-compose-music";
       break;
   }
+  console.log(host + "?token=" + tk);
+
   globalStore.customPageUrl = host + "?token=" + tk;
   poolVisible.value = false;
 };

@@ -5,10 +5,16 @@
     <Mobile v-else />
   </template>
   <FullscreenSpin tip="数据初始化中，请稍等 ..." v-else loading :mask="false" />
+  <iframe
+    ref="customIfr"
+    :class="['custom-ifr', { open: !!globalStore.customPageUrl }]"
+    :src="globalStore.customPageUrl"
+    frameborder="0"
+  ></iframe>
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, unref, watch } from "vue";
+import { nextTick, onMounted, ref, unref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import {
   useScreenStore,
@@ -59,6 +65,7 @@ const screenStore = useScreenStore();
 const globalStore = useGlobalStore();
 const { createSlide } = useSlideHandler();
 const { createFrameElement } = useCreateElement();
+const customIfr = ref();
 
 if (import.meta.env.MODE !== "development") {
   window.onbeforeunload = () => false;
@@ -125,6 +132,8 @@ const getCourseDetails = async (
         .then((ctResponse) => {
           // loading.value = false;
           let ct = ctResponse.data as string;
+          console.log("asdasd", ct);
+
           if (ct) {
             // -- 将 JSON 字符串解析为对象
             const jsonObj = JSON.parse(ct);
@@ -318,10 +327,10 @@ const onSave = async () => {
 };
 
 // -- 临时代码 start
-const tk =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NjA4NjAzLCJpYXQiOjE3NDU3NDQ2MDMsImp0aSI6IjM2NzAwZmQ3Y2Q2ZDQ3NWRiZmRhYWI1YzIwMTRmZWI4IiwidXNlcl9pZCI6OTc1fQ.7C-GJEqZC9RkPpZK_nqcCzU1A8Aevf1EsSvNqzmmkVk";
-localStorage.setItem("AUTHORIZATION_TOKEN", tk);
-getCourseDetails(tk);
+// const tk =
+//   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NjA4NjAzLCJpYXQiOjE3NDU3NDQ2MDMsImp0aSI6IjM2NzAwZmQ3Y2Q2ZDQ3NWRiZmRhYWI1YzIwMTRmZWI4IiwidXNlcl9pZCI6OTc1fQ.7C-GJEqZC9RkPpZK_nqcCzU1A8Aevf1EsSvNqzmmkVk";
+// localStorage.setItem("AUTHORIZATION_TOKEN", tk);
+// getCourseDetails(tk);
 // -- 临时代码 end
 
 // -- 监听发送过来的消息
@@ -463,5 +472,20 @@ window.addEventListener("unload", () => {
 <style lang="scss">
 #app {
   height: 100%;
+}
+.custom-ifr {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  &.open {
+    z-index: 100;
+  }
+}
+
+.el-message {
+  z-index: 9999 !important;
 }
 </style>

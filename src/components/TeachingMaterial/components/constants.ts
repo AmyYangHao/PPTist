@@ -135,7 +135,7 @@ export const myInteraction = [
     component: CustomSpectrumRecognition,
   },
   {
-    label: "编创",
+    label: "互动编创",
     id: 5,
     component: CustomCompilationAndCreation,
   },
