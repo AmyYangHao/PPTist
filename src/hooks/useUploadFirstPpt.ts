@@ -13,6 +13,8 @@ export default () => {
 
     const foreignObjectSpans = div.querySelectorAll('foreignObject [xmlns]')
     foreignObjectSpans.forEach(spanRef => spanRef.removeAttribute('xmlns'))
+    console.log(foreignObjectSpans);
+
 
     const app = createApp(ThumbnailSlide, {
       class: "thumbnail",
@@ -21,6 +23,7 @@ export default () => {
     });
     app.mount(div);
     document.body.appendChild(div);
+    console.log(app);
 
     const config = {
       quality: 1,
@@ -28,7 +31,10 @@ export default () => {
       fontEmbedCSS: "",
     };
 
-    return toPng(div, config).finally(() => {
+    return toPng(div, config).then((res: any) => {
+      console.log(res);
+      return res
+    }).finally(() => {
       app.unmount();
       div.remove();
     });

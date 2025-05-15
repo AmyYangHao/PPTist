@@ -365,6 +365,7 @@ import LaTeXEditor from "@/components/LaTeXEditor/index.vue";
 import FileInput from "@/components/FileInput.vue";
 import Modal from "@/components/Modal.vue";
 import Divider from "@/components/Divider.vue";
+import ToolIcon from "@/components/ToolIcon.vue";
 import Popover from "@/components/Popover.vue";
 import PopoverMenuItem from "@/components/PopoverMenuItem.vue";
 //AI音乐自定义组件
@@ -437,7 +438,7 @@ const interactionPoolVisible = ref(false);
 const insertSong = (query: string) => {
   const token = localStorage.getItem("AUTHORIZATION_TOKEN");
   let host = import.meta.env.VITE_PLATFORM_HOST + "/ppt";
-  const urlSrc = `${host}${query}&timestamp=${Date.now()}&token=${token}`;
+  const urlSrc = `${host}${query}&timestamp=${Date.now()}&token=${token}&hide_side_bar=1`;
   insertFrameElement(urlSrc);
   songModalVisible.value = false;
 };
@@ -445,7 +446,7 @@ const insertSong = (query: string) => {
 const insertEncyclopedia = (path: string) => {
   const token = localStorage.getItem("AUTHORIZATION_TOKEN");
   let host = import.meta.env.VITE_PLATFORM_HOST + "/ppt";
-  const urlSrc = `${host}${path}&timestamp=${Date.now()}&token=${token}`;
+  const urlSrc = `${host}${path}&timestamp=${Date.now()}&token=${token}&hide_side_bar=1`;
   insertFrameElement(urlSrc);
   sourceMaterialVisible.value = false;
 };
@@ -572,6 +573,7 @@ const toggleNotesPanel = () => {
 
   .handler-item {
     width: 32px;
+    height: 42px;
 
     &:not(.group-btn):hover {
       background-color: #f1f1f1;

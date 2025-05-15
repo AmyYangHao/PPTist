@@ -337,7 +337,7 @@ const onSave = async () => {
 let isModal = false;
 type PostMsgType = { type: string; data: any } | "";
 window.addEventListener("message", (event: MessageEvent<PostMsgType>) => {
-  console.log("fckk", event);
+  // console.log("fckk", event);
 
   if (event.data) {
     const { type, data } = event.data;
@@ -425,19 +425,23 @@ window.addEventListener("message", (event: MessageEvent<PostMsgType>) => {
   }
 });
 // 向父级窗口发送上传状态及解析的数据
-watch(importExporting, async (newVal) => {
+watch(importExporting, (newVal) => {
+  console.log("sdlgkjkldfg", newVal);
+
   window.parent.postMessage(
     { type: "uploadCoursewareLoading", data: unref(newVal) },
     "*"
   );
-  if (!newVal) {
-    const cover_url = await getFirstPPT();
+  if (newVal == false) {
+    // getFirstPPT().then((res: any) => {
+    //   console.log("asd", res);
+    // });
+
     window.parent.postMessage(
       {
         type: "uploadCoursewareData",
         data: {
           content: JSON.stringify(slides.value),
-          cover_url,
         },
       },
       "*"

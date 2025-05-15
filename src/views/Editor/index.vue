@@ -120,7 +120,7 @@ usePasteEvent();
   }
 
   .center-top {
-    height: 40px;
+    height: 52px;
   }
 }
 .layout-content-right {

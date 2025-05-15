@@ -7,7 +7,7 @@
         v-model:value="mainMenuVisible"
       >
         <template #content>
-          <FileInput
+          <!-- <FileInput
             accept="application/vnd.openxmlformats-officedocument.presentationml.presentation"
             @change="
               (files) => {
@@ -17,7 +17,7 @@
             "
           >
             <PopoverMenuItem>导入 pptx 文件</PopoverMenuItem>
-          </FileInput>
+          </FileInput> -->
           <!-- <FileInput
             accept=".pptist"
             @change="
@@ -66,13 +66,26 @@
 
     <div class="right">
       <div class="group-menu-item">
-        <div
+        <!-- <div
           class="menu-item"
           v-tooltip="'幻灯片放映（F5）'"
           @click="enterScreening()"
         >
           <IconPpt class="icon" size="18" />
-        </div>
+        </div> -->
+
+        <FileInput
+          accept="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+          @change="
+            (files) => {
+              importPPTXFile(files);
+              mainMenuVisible = false;
+            }
+          "
+        >
+          <div class="fck-import">导入pptx文件</div>
+        </FileInput>
+
         <Popover trigger="click" center>
           <template #content>
             <PopoverMenuItem @click="enterScreeningFromStart()"
@@ -82,11 +95,18 @@
               >从当前页开始</PopoverMenuItem
             >
           </template>
-          <div class="arrow-btn"><IconDown class="arrow" /></div>
+          <div class="button play">
+            <img :src="iconSaveSrc" width="18" />
+            <span>放映</span>
+          </div>
         </Popover>
       </div>
-      <div class="menu-item" v-tooltip="'保存'" @click="onSave">
+      <!-- <div class="menu-item" v-tooltip="'保存'" @click="onSave">
         <IconDownload class="icon" />
+      </div> -->
+      <div class="button save" @click="onSave">
+        <img :src="iconPlaySrc" width="18" />
+        <span>保存</span>
       </div>
     </div>
 
@@ -126,6 +146,8 @@ import { base64ToFile } from "@/utils/helper";
 import { apiCommon, apiCourse } from "@/api/apiServer";
 import { ElMessage } from "element-plus";
 import Bus from "@likg/bus";
+import iconPlaySrc from "@/assets/icon/play.png";
+import iconSaveSrc from "@/assets/icon/save.png";
 
 const mainStore = useMainStore();
 const slidesStore = useSlidesStore();
@@ -310,5 +332,40 @@ const openAIPPTDialog = () => {
 .github-link {
   display: inline-block;
   height: 30px;
+}
+.button {
+  width: 90px;
+  height: 30px;
+  background: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  gap: 4px;
+  img {
+    margin-right: 4px;
+  }
+
+  &.play {
+    background: rgb(54, 169, 105);
+  }
+  &.save {
+    background: rgb(223, 117, 30);
+  }
+}
+.fck-import {
+  width: 120px;
+  height: 30px;
+  border-radius: 5px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #4096ff;
+  margin-right: 10px;
 }
 </style>

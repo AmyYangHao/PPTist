@@ -38,7 +38,9 @@ onMounted(() => {
 
 const fetchOptions = async (scope: number) => {
   const resp = await apiCommon.getOptions(scope);
-  state.classifyOptions = resp.data.filter((item) => item.label !== "自主节奏训练");
+  state.classifyOptions = resp.data.filter(
+    (item) => item.label !== "自主节奏训练"
+  );
   state.formData.classify_id = state.classifyOptions[0]?.id;
 };
 
@@ -58,8 +60,13 @@ const onSearch = () => {
   fetchTableData();
 };
 const onInsert = (scope: API.BeatItemProps) => {
-  const item = state.classifyOptions.find((item) => item.id === state.formData.classify_id);
-  emits("insert", `?q=train_rhythm&trainType=${item?.label}&id=${scope.id}&source=ppt`);
+  const item = state.classifyOptions.find(
+    (item) => item.id === state.formData.classify_id
+  );
+  emits(
+    "insert",
+    `?q=train_rhythm&trainType=${item?.label}&id=${scope.id}&source=ppt&hide_side_bar=1`
+  );
 };
 
 const onCurrentChange = (v: number) => {
@@ -80,31 +87,61 @@ watch(
 <template>
   <el-form :inline="true" :model="state.formData" class="demo-form-inline">
     <el-form-item>
-      <el-select v-model="state.formData.classify_id" placeholder="请选择训练类型" style="width: 150px">
-        <el-option v-for="item in state.classifyOptions" :key="item.id" :label="item.label" :value="item.id" />
+      <el-select
+        v-model="state.formData.classify_id"
+        placeholder="请选择训练类型"
+        style="width: 150px"
+      >
+        <el-option
+          v-for="item in state.classifyOptions"
+          :key="item.id"
+          :label="item.label"
+          :value="item.id"
+        />
       </el-select>
     </el-form-item>
     <el-form-item>
-      <el-input v-model="state.formData.keyword" style="width: 240px" clearable placeholder="请输入关键字" />
+      <el-input
+        v-model="state.formData.keyword"
+        style="width: 240px"
+        clearable
+        placeholder="请输入关键字"
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSearch">查询</el-button>
     </el-form-item>
   </el-form>
 
-  <el-table :data="state.tableData" style="width: 100%" highlight-current-row empty-text="暂无数据">
+  <el-table
+    :data="state.tableData"
+    style="width: 100%"
+    highlight-current-row
+    empty-text="暂无数据"
+  >
     <el-table-column type="index" width="80" label="序号" />
     <el-table-column prop="name" label="模板" />
     <el-table-column prop="signature" label="节拍" />
     <el-table-column label="操作" fixed="right" width="100">
       <template #default="scope">
-        <el-button type="danger" size="small" @click.prevent="onInsert(scope.row)">插入</el-button>
+        <el-button
+          type="danger"
+          size="small"
+          @click.prevent="onInsert(scope.row)"
+          >插入</el-button
+        >
       </template>
     </el-table-column>
   </el-table>
   <div class="pagination">
     <span class="total">共 {{ pagenation.total }} 条</span>
-    <el-pagination :page-size="8" :current-page="pagenation.current" @current-change="onCurrentChange" layout="prev, pager, next" :total="pagenation.total" />
+    <el-pagination
+      :page-size="8"
+      :current-page="pagenation.current"
+      @current-change="onCurrentChange"
+      layout="prev, pager, next"
+      :total="pagenation.total"
+    />
   </div>
 </template>
 
