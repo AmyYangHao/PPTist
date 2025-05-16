@@ -71,45 +71,57 @@
     </div>
 
     <div class="add-element-handler">
-      <div class="handler-item group-btn" v-tooltip="'插入文字'">
-        <IconFontSize
-          class="icon"
+      <div
+        class="handler-item group-btn inset-text"
+        v-tooltip="'插入文字'"
+        @click="drawText()"
+      >
+        <ToolIcon
+          name="text"
+          style="min-width: 56px"
+          :disabled="globalStore.isDisableTopWidget"
           :class="{ active: creatingElement?.type === 'text' }"
-          @click="drawText()"
-        />
-
-        <Popover
-          trigger="click"
-          v-model:value="textTypeSelectVisible"
-          style="height: 100%"
-          :offset="10"
         >
-          <template #content>
-            <PopoverMenuItem
-              center
-              @click="
-                () => {
-                  drawText();
-                  textTypeSelectVisible = false;
-                }
-              "
-              ><IconTextRotationNone /> 横向文本框</PopoverMenuItem
+          <div class="text-box">
+            文本
+            <Popover
+              trigger="click"
+              v-model:value="textTypeSelectVisible"
+              style="height: 100%"
+              :offset="10"
             >
-            <PopoverMenuItem
-              center
-              @click="
-                () => {
-                  drawText(true);
-                  textTypeSelectVisible = false;
-                }
-              "
-              ><IconTextRotationDown /> 竖向文本框</PopoverMenuItem
-            >
-          </template>
-          <IconDown class="arrow" />
-        </Popover>
+              <template #content>
+                <PopoverMenuItem
+                  center
+                  @click="
+                    () => {
+                      drawText();
+                      textTypeSelectVisible = false;
+                    }
+                  "
+                  ><IconTextRotationNone /> 横向文本框</PopoverMenuItem
+                >
+                <PopoverMenuItem
+                  center
+                  @click="
+                    () => {
+                      drawText(true);
+                      textTypeSelectVisible = false;
+                    }
+                  "
+                  ><IconTextRotationDown /> 竖向文本框</PopoverMenuItem
+                >
+              </template>
+              <IconDown class="arrow" />
+            </Popover>
+          </div>
+        </ToolIcon>
       </div>
-      <div class="handler-item group-btn" v-tooltip="'插入形状'" :offset="10">
+      <div
+        class="handler-item group-btn inset-text"
+        v-tooltip="'插入形状'"
+        :offset="10"
+      >
         <Popover
           trigger="click"
           style="height: 100%"
@@ -119,15 +131,25 @@
           <template #content>
             <ShapePool @select="(shape) => drawShape(shape)" />
           </template>
-          <IconGraphicDesign
+
+          <!-- <IconGraphicDesign
             class="icon"
             :class="{
               active: creatingCustomShape || creatingElement?.type === 'shape',
             }"
-          />
+          /> -->
+          <ToolIcon
+            :disabled="globalStore.isDisableTopWidget"
+            name="shape"
+            :class="{
+              active: creatingCustomShape || creatingElement?.type === 'shape',
+            }"
+          >
+            形状
+          </ToolIcon>
         </Popover>
 
-        <Popover
+        <!-- <Popover
           trigger="click"
           v-model:value="shapeMenuVisible"
           style="height: 100%"
@@ -145,21 +167,30 @@
               >自由绘制</PopoverMenuItem
             >
           </template>
+
           <IconDown class="arrow" />
-        </Popover>
+        </Popover> -->
       </div>
       <FileInput @change="(files) => insertImageElement(files)">
-        <IconPicture class="handler-item" v-tooltip="'插入图片'" />
+        <ToolIcon name="image" :disabled="globalStore.isDisableTopWidget">
+          图片
+        </ToolIcon>
       </FileInput>
       <Popover trigger="click" v-model:value="linePoolVisible" :offset="10">
         <template #content>
           <LinePool @select="(line) => drawLine(line)" />
         </template>
-        <IconConnection
+        <!-- <IconConnection
           class="handler-item"
           :class="{ active: creatingElement?.type === 'line' }"
           v-tooltip="'插入线条'"
-        />
+        /> -->
+        <ToolIcon
+          name="line"
+          :disabled="globalStore.isDisableTopWidget"
+          :class="{ active: creatingElement?.type === 'line' }"
+          >线条</ToolIcon
+        >
       </Popover>
       <Popover trigger="click" v-model:value="chartPoolVisible" :offset="10">
         <template #content>
@@ -172,7 +203,10 @@
             "
           />
         </template>
-        <IconChartProportion class="handler-item" v-tooltip="'插入图表'" />
+        <!-- <IconChartProportion class="handler-item" v-tooltip="'插入图表'" /> -->
+        <ToolIcon name="chart" :disabled="globalStore.isDisableTopWidget"
+          >图表</ToolIcon
+        >
       </Popover>
       <Popover
         trigger="click"
@@ -190,13 +224,18 @@
             "
           />
         </template>
-        <IconInsertTable class="handler-item" v-tooltip="'插入表格'" />
+        <!-- <IconInsertTable class="handler-item" v-tooltip="'插入表格'" /> -->
+
+        <ToolIcon name="table" :disabled="globalStore.isDisableTopWidget">
+          表格
+        </ToolIcon>
       </Popover>
-      <IconFormula
+      <!-- <IconFormula
         class="handler-item"
         v-tooltip="'插入公式'"
         @click="latexEditorVisible = true"
-      />
+      /> -->
+      <ToolIcon name="fx" @click="latexEditorVisible = true">公式</ToolIcon>
       <Popover trigger="click" v-model:value="mediaInputVisible" :offset="10">
         <template #content>
           <MediaInput
@@ -215,7 +254,15 @@
             "
           />
         </template>
-        <IconVideoTwo class="handler-item" v-tooltip="'插入音视频'" />
+        <!-- <IconVideoTwo class="handler-item" v-tooltip="'插入音视频'" /> -->
+        <ToolIcon
+          name="video"
+          style="min-width: 56px"
+          @click="mediaInputVisible = true"
+          :disabled="globalStore.isDisableTopWidget"
+        >
+          音视频
+        </ToolIcon>
       </Popover>
       <ToolIcon
         name="text-book"
@@ -586,6 +633,12 @@ const toggleNotesPanel = () => {
     &.group-btn {
       width: auto;
       margin-right: 5px;
+      .fck-btn-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
 
       &:hover {
         background-color: #f3f3f3;
@@ -619,6 +672,11 @@ const toggleNotesPanel = () => {
       }
     }
   }
+  .fck-group {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+  }
 }
 .handler-item {
   height: 30px;
@@ -630,6 +688,18 @@ const toggleNotesPanel = () => {
   border-radius: $borderRadius;
   overflow: hidden;
   cursor: pointer;
+  &.inset-text {
+    height: auto;
+    flex-direction: column;
+    font-size: 12px;
+    justify-content: center;
+    align-items: flex-start;
+
+    .text-box {
+      display: flex;
+      justify-content: center;
+    }
+  }
 
   &.disable {
     opacity: 0.5;
