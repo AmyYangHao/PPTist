@@ -247,7 +247,7 @@ const getCourseDetails = async (
 
                     // -- 修改域名
                     element.src = replaceDomain(
-                      element.src,
+                      element.src + "&hide_side_bar=1",
                       import.meta.env.VITE_PLATFORM_HOST
                     );
                     console.log("element.src 修改后 >>> ", element.src);
