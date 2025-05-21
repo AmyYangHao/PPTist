@@ -55,7 +55,7 @@ const list = [
       },
       {
         type: "toolIcon",
-        name: "编创",
+        name: "互动编创",
         icon: "compilation-and-creation",
         key: "compilation-and-creation",
       },
