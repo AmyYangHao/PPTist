@@ -94,7 +94,7 @@ const clickHandle = (key: string) => {
 
 <style lang="scss" scoped>
 .shape-pool {
-  width: 200px;
+  width: 220px;
   max-height: 520px;
   overflow: auto;
   margin-top: -12px;
