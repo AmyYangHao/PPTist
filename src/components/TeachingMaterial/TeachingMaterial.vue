@@ -31,7 +31,7 @@ const handleClick = (tab: TabsPaneContext) => {
 
 const insert = (path: string) => {
   let host = import.meta.env.VITE_PLATFORM_HOST + "/ppt";
-  const urlSrc = `${host}${path}&timestamp=${Date.now()}&token=${token}`;
+  const urlSrc = `${host}${path}&timestamp=${Date.now()}&token=${token}&hide_side_bar=1`;
   console.log("嵌入模块地址 >>>", urlSrc);
   emits("insert", urlSrc);
 };
@@ -54,7 +54,9 @@ const onSelect = (item: any) => {
       <div
         class="menus-item"
         :class="{ active: selected === item.id }"
-        v-for="item in activeName === 'interactionTemplate' ? interactionTemplate : myInteraction"
+        v-for="item in activeName === 'interactionTemplate'
+          ? interactionTemplate
+          : myInteraction"
         :key="item.id"
         @click="onSelect(item)"
       >

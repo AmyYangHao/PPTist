@@ -245,11 +245,14 @@ const getCourseDetails = async (
                       );
                     }
 
+                    console.log("sdfkjherjkglh", element.src);
+
                     // -- 修改域名
                     element.src = replaceDomain(
                       element.src + "&hide_side_bar=1",
                       import.meta.env.VITE_PLATFORM_HOST
                     );
+                    console.log("sdfkjherjkglh", element.src);
                     console.log("element.src 修改后 >>> ", element.src);
                   }
                 }
@@ -407,13 +410,13 @@ window.addEventListener("message", (event: MessageEvent<PostMsgType>) => {
         let query = "";
         switch (data.kind) {
           case "自定义编创":
-            query = `?q=custom_compose_music&source=ppt&timestamp=${timestamp}&id=${data.id}&token=${token}`;
+            query = `?q=custom_compose_music&source=ppt&timestamp=${timestamp}&id=${data.id}&token=${token}&hide_side_bar=1`;
             break;
           case "自定义节奏训练":
-            query = `?q=train_rhythm&id=${data.id}&source=ppt&trainType=自定义节奏训练&timestamp=${timestamp}&token=${token}`;
+            query = `?q=train_rhythm&id=${data.id}&source=ppt&trainType=自定义节奏训练&timestamp=${timestamp}&token=${token}&hide_side_bar=1`;
             break;
           case "自定义趣味识谱":
-            query = `?q=train_fun_sheet_music&id=${data.id}&source=ppt&timestamp=${timestamp}&token=${token}`;
+            query = `?q=train_fun_sheet_music&id=${data.id}&source=ppt&timestamp=${timestamp}&token=${token}&hide_side_bar=1`;
             break;
         }
         const src = host + query;
