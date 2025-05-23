@@ -72,7 +72,7 @@
       <div class="page-btn page-bg" @click="onClose">结束</div>
     </div>
 
-    <div
+    <!-- <div
       class="tools-right"
       :class="{ visible: rightToolsVisible }"
       @mouseleave="rightToolsVisible = false"
@@ -125,7 +125,7 @@
           @click="exitScreening()"
         />
       </div>
-    </div>
+    </div> -->
 
     <BottomThumbnails v-if="bottomThumbnailsVisible" />
   </div>
