@@ -87,7 +87,7 @@ const clickHandle = (key: string) => {
   }
   console.log(host + "?token=" + tk);
 
-  globalStore.customPageUrl = host + "?token=" + tk;
+  globalStore.customPageUrl = `${host}?token=${tk}&hide_side_bar=1`;
   poolVisible.value = false;
 };
 </script>
