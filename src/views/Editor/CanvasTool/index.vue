@@ -236,7 +236,7 @@
         @click="latexEditorVisible = true"
       /> -->
       <ToolIcon name="fx" @click="latexEditorVisible = true">公式</ToolIcon>
-      <Popover trigger="click" v-model:value="mediaInputVisible" :offset="10">
+      <!-- <Popover trigger="click" v-model:value="mediaInputVisible" :offset="10">
         <template #content>
           <MediaInput
             @close="mediaInputVisible = false"
@@ -254,7 +254,7 @@
             "
           />
         </template>
-        <!-- <IconVideoTwo class="handler-item" v-tooltip="'插入音视频'" /> -->
+         <IconVideoTwo class="handler-item" v-tooltip="'插入音视频'" /> 
         <ToolIcon
           name="video"
           style="min-width: 56px"
@@ -263,7 +263,15 @@
         >
           音视频
         </ToolIcon>
-      </Popover>
+      </Popover> -->
+      <ToolIcon
+        name="video"
+        style="min-width: 56px"
+        @click="mediaInputVisible = true"
+        :disabled="globalStore.isDisableTopWidget"
+      >
+        音视频
+      </ToolIcon>
       <ToolIcon
         name="text-book"
         style="min-width: 68px"
@@ -388,6 +396,27 @@
       :close-button="true"
     >
       <TeachingMaterial @insert="insertFrameElement" />
+    </Modal>
+    <Modal
+      v-model:visible="mediaInputVisible"
+      :width="600"
+      :close-button="true"
+    >
+      <MediaInput
+        @close="mediaInputVisible = false"
+        @insertVideo="
+          (src) => {
+            createVideoElement(src);
+            mediaInputVisible = false;
+          }
+        "
+        @insertAudio="
+          (src) => {
+            createAudioElement(src);
+            mediaInputVisible = false;
+          }
+        "
+      />
     </Modal>
   </div>
 </template>

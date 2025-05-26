@@ -168,8 +168,8 @@ export default () => {
     return new File([blob], fileName, { type: blob.type });
   }
 
-  const getFileUrl = async (el: any) => {
-    let file = await blobUrlToFile((el.blob || el.src), "mp4")
+  const getFileUrl = async (el: any, type: string) => {
+    let file = await blobUrlToFile((el.blob || el.src), type)
     console.log(file);
 
     const resp = await apiCommon.newUploadFile(file);
@@ -261,10 +261,8 @@ export default () => {
           remark: item.note || '',
         }
 
-        const parseElements = (elements: Element[]) => {
+        const parseElements = async (elements: Element[]) => {
           const sortedElements = elements.sort((a, b) => a.order - b.order)
-          console.log(sortedElements);
-
 
           for (const el of sortedElements) {
             const originWidth = el.width || 1
@@ -367,42 +365,39 @@ export default () => {
               })
             }
             else if (el.type === 'audio') {
-
-              getFileUrl(el).then((url: string) => {
-                console.log(el, url);
-                slide.elements.push({
-                  type: 'audio',
-                  id: nanoid(10),
-                  src: url,
-                  width: el.width,
-                  height: el.height,
-                  left: el.left,
-                  top: el.top,
-                  rotate: 0,
-                  fixedRatio: false,
-                  color: theme.value.themeColors[0],
-                  loop: false,
-                  autoplay: false,
-                })
+              let url = await getFileUrl(el, "mp3");
+              console.log(el, url);
+              slide.elements.push({
+                type: 'audio',
+                id: nanoid(10),
+                src: url,
+                width: el.width,
+                height: el.height,
+                left: el.left,
+                top: el.top,
+                rotate: 0,
+                fixedRatio: false,
+                color: theme.value.themeColors[0],
+                loop: false,
+                autoplay: false,
               })
             }
             else if (el.type === 'video') {
-              getFileUrl(el).then((url: string) => {
-                console.log(el, url);
-                slide.elements.push({
-                  type: 'video',
-                  id: nanoid(10),
-                  // src: "https://xingzhe-web.s3.cn-northwest-1.amazonaws.com.cn/ai_music_classroom/media/file/9290adb71b5e4986a5b0cc050af7eff1.mp4",
-                  src: url,
-                  // src: (el.blob || el.src)!,
-                  width: el.width,
-                  height: el.height,
-                  left: el.left,
-                  top: el.top,
-                  rotate: 0,
-                  autoplay: false,
-                })
+              let url = await getFileUrl(el, "mp4");
+
+              console.log(el, url);
+              slide.elements.push({
+                type: 'video',
+                id: nanoid(10),
+                src: url,
+                width: el.width,
+                height: el.height,
+                left: el.left,
+                top: el.top,
+                rotate: 0,
+                autoplay: false,
               })
+              // })
             }
             else if (el.type === 'shape') {
               if (el.shapType === 'line' || /Connector/.test(el.shapType)) {
@@ -686,6 +681,7 @@ export default () => {
           }
         }
         parseElements([...item.elements, ...item.layoutElements])
+        console.log("askjdfhkjlhflkjwef", slide);
         slides.push(slide)
       }
 

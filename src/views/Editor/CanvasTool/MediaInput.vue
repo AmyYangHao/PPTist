@@ -1,75 +1,117 @@
 <template>
   <div class="media-input">
-    <Tabs 
-      :tabs="tabs" 
-      v-model:value="type" 
-      :tabsStyle="{ marginBottom: '15px' }" 
-    />
+    <p class="title">上传音频或视频</p>
+    <el-upload
+      class="upload-demo"
+      drag
+      :action="actionUrl"
+      accept=".mp3,.wav,.mp4,.mov"
+      :headers="headers"
+      :on-success="onSuccess"
+      :before-upload="beforeUpload"
+      :limit="1"
+      :multiple="false"
+      :on-exceed="handleExceed"
+      :on-remove="onRemove"
+    >
+      <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+      <div class="el-upload__text">拖拽文件到这里 或 <em>点击上传</em></div>
+      <template #tip>
+        <div class="el-upload__tip">
+          温馨提示：支持格式 .mp3 .wav .mp4 .mov（上传文件不超过500MB）
+        </div>
+      </template>
+    </el-upload>
 
-    <template v-if="type === 'video'">
-      <Input v-model:value="videoSrc" placeholder="请输入视频地址，e.g. https://xxx.mp4"></Input>
-      <div class="btns">
-        <Button @click="emit('close')" style="margin-right: 10px;">取消</Button>
-        <Button type="primary" @click="insertVideo()">确认</Button>
-      </div>
-    </template>
-
-    <template v-if="type === 'audio'">
-      <Input v-model:value="audioSrc" placeholder="请输入音频地址，e.g. https://xxx.mp3"></Input>
-      <div class="btns">
-        <Button @click="emit('close')" style="margin-right: 10px;">取消</Button>
-        <Button type="primary" @click="insertAudio()">确认</Button>
-      </div>
-    </template>
+    <div class="footer">
+      <el-button type="danger" @click="emit('close')">取消</el-button>
+      <el-button type="primary" @click="onSure">确定</el-button>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import message from '@/utils/message'
-import Tabs from '@/components/Tabs.vue'
-import Input from '@/components/Input.vue'
-import Button from '@/components/Button.vue'
+import { ref } from "vue";
+import Validator from "@likg/validator";
 
-type TypeKey = 'video' | 'audio'
+import { UploadFilled } from "@element-plus/icons-vue";
+import { type UploadProps, ElMessage } from "element-plus";
+type TypeKey = "video" | "audio";
 interface TabItem {
-  key: TypeKey
-  label: string
+  key: TypeKey;
+  label: string;
 }
+
+const token = localStorage.getItem("AUTHORIZATION_TOKEN");
+const headers = {
+  "Access-Control-Allow-Origin": "*",
+  Authorization: token ? `Bearer ${token}` : "",
+};
+const actionUrl =
+  import.meta.env.VITE_API_HOST + "/mgr/textbook_courseware/upload_file/";
+
+const url = ref("");
 
 const emit = defineEmits<{
-  (event: 'insertVideo', payload: string): void
-  (event: 'insertAudio', payload: string): void
-  (event: 'close'): void
-}>()
+  (event: "insertVideo", payload: string): void;
+  (event: "insertAudio", payload: string): void;
+  (event: "close"): void;
+}>();
 
-const type = ref<TypeKey>('video')
+const onSuccess = (resp: any) => {
+  url.value = resp.data.full_path;
+};
+const onRemove = () => {
+  url.value = "";
+};
+const onSure = () => {
+  if (!url.value) {
+    ElMessage.error("请上传音频或视频");
+  }
+  if (Validator.isAudio(url.value)) {
+    console.log("插入音频");
+    emit("insertAudio", url.value);
+  }
+  if (Validator.isVideo(url.value)) {
+    console.log("插入视频");
+    emit("insertVideo", url.value);
+  }
+};
 
-const videoSrc = ref('https://mazwai.com/videvo_files/video/free/2019-01/small_watermarked/181004_04_Dolphins-Whale_06_preview.webm')
-const audioSrc = ref('https://freesound.org/data/previews/614/614107_11861866-lq.mp3')
+const handleExceed = () => {
+  ElMessage.error("只允许上传一个文件。");
+};
+const beforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
+  console.log(rawFile);
 
-const tabs: TabItem[] = [
-  { key: 'video', label: '视频' },
-  { key: 'audio', label: '音频' },
-]
-
-const insertVideo = () => {
-  if (!videoSrc.value) return message.error('请先输入正确的视频地址')
-  emit('insertVideo', videoSrc.value)
-}
-
-const insertAudio = () => {
-  if (!audioSrc.value) return message.error('请先输入正确的音频地址')
-  emit('insertAudio', audioSrc.value)
-}
+  if (
+    !Validator.checkFile({
+      type: "extension",
+      file: rawFile,
+      accept: ".mp3,.wav,.mp4,.mov",
+    })
+  ) {
+    ElMessage.error("仅支持格式 .mp4, .mov, .mp3, .wav");
+    return false;
+  } else if (
+    !Validator.checkFile({ type: "size", file: rawFile, maxSize: 1024 })
+  ) {
+    ElMessage.error("上传文件不超过1024MB");
+    return false;
+  }
+  return true;
+};
 </script>
 
 <style lang="scss" scoped>
-.media-input {
-  width: 480px;
+.title {
+  margin-bottom: 16px;
+  color: #444;
 }
-.btns {
-  margin-top: 10px;
-  text-align: right;
+.footer {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>
