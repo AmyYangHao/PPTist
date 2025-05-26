@@ -26,6 +26,8 @@ import type {
   PPTElement,
 } from '@/types/slides'
 import { getElementListRange } from '@/utils/element'
+import { apiCommon } from '@/api/apiServer'
+import { Setting } from '@icon-park/vue-next'
 
 const convertFontSizePtToPx = (html: string, ratio: number) => {
   return html.replace(/font-size:\s*([\d.]+)pt/g, (match, p1) => {
@@ -39,7 +41,7 @@ export default () => {
 
   const { addHistorySnapshot } = useHistorySnapshot()
   const { addSlidesFromData } = useAddSlidesOrElements()
-  const { isEmptySlide } = useSlideHandler()
+  const { isEmptySlide, resetSlides } = useSlideHandler()
 
   const exporting = ref(false)
 
@@ -156,9 +158,31 @@ export default () => {
 
     return { x: graphicX, y: graphicY }
   }
+  async function blobUrlToFile(blobUrl: string, type: string) {
+    const response = await fetch(blobUrl);
+    const blob = await response.blob();
+
+    // 提取文件名（或自定义）
+    const fileName = `video-${Date.now()}.${blob.type.split('/')[1] || type}`;
+
+    return new File([blob], fileName, { type: blob.type });
+  }
+
+  const getFileUrl = async (el: any) => {
+    let file = await blobUrlToFile((el.blob || el.src), "mp4")
+    console.log(file);
+
+    const resp = await apiCommon.newUploadFile(file);
+    let url = ""
+    if (resp.code === 200) {
+      url = resp.data.full_path;
+    }
+    return url
+  }
 
   // 导入PPTX文件
-  const importPPTXFile = (files: FileList, options?: { cover?: boolean; fixedViewport?: boolean }) => {
+  const importPPTXFile = async (files: FileList, options?: { cover?: boolean; fixedViewport?: boolean }) => {
+    resetSlides()
     const defaultOptions = {
       cover: false,
       fixedViewport: false,
@@ -239,6 +263,8 @@ export default () => {
 
         const parseElements = (elements: Element[]) => {
           const sortedElements = elements.sort((a, b) => a.order - b.order)
+          console.log(sortedElements);
+
 
           for (const el of sortedElements) {
             const originWidth = el.width || 1
@@ -341,32 +367,41 @@ export default () => {
               })
             }
             else if (el.type === 'audio') {
-              slide.elements.push({
-                type: 'audio',
-                id: nanoid(10),
-                src: el.blob,
-                width: el.width,
-                height: el.height,
-                left: el.left,
-                top: el.top,
-                rotate: 0,
-                fixedRatio: false,
-                color: theme.value.themeColors[0],
-                loop: false,
-                autoplay: false,
+
+              getFileUrl(el).then((url: string) => {
+                console.log(el, url);
+                slide.elements.push({
+                  type: 'audio',
+                  id: nanoid(10),
+                  src: url,
+                  width: el.width,
+                  height: el.height,
+                  left: el.left,
+                  top: el.top,
+                  rotate: 0,
+                  fixedRatio: false,
+                  color: theme.value.themeColors[0],
+                  loop: false,
+                  autoplay: false,
+                })
               })
             }
             else if (el.type === 'video') {
-              slide.elements.push({
-                type: 'video',
-                id: nanoid(10),
-                src: (el.blob || el.src)!,
-                width: el.width,
-                height: el.height,
-                left: el.left,
-                top: el.top,
-                rotate: 0,
-                autoplay: false,
+              getFileUrl(el).then((url: string) => {
+                console.log(el, url);
+                slide.elements.push({
+                  type: 'video',
+                  id: nanoid(10),
+                  // src: "https://xingzhe-web.s3.cn-northwest-1.amazonaws.com.cn/ai_music_classroom/media/file/9290adb71b5e4986a5b0cc050af7eff1.mp4",
+                  src: url,
+                  // src: (el.blob || el.src)!,
+                  width: el.width,
+                  height: el.height,
+                  left: el.left,
+                  top: el.top,
+                  rotate: 0,
+                  autoplay: false,
+                })
               })
             }
             else if (el.type === 'shape') {
@@ -654,18 +689,19 @@ export default () => {
         slides.push(slide)
       }
 
-      if (cover) {
-        slidesStore.updateSlideIndex(0)
-        slidesStore.setSlides(slides)
-        addHistorySnapshot()
-      }
-      else if (isEmptySlide.value) {
-        slidesStore.setSlides(slides)
-        addHistorySnapshot()
-      }
-      else addSlidesFromData(slides)
-
-      exporting.value = false
+      setTimeout(() => {
+        if (cover) {
+          slidesStore.updateSlideIndex(0)
+          slidesStore.setSlides(slides)
+          addHistorySnapshot()
+        }
+        else if (isEmptySlide.value) {
+          slidesStore.setSlides(slides)
+          addHistorySnapshot()
+        }
+        else addSlidesFromData(slides)
+        exporting.value = false
+      }, 5000)
     }
     reader.readAsArrayBuffer(file)
   }

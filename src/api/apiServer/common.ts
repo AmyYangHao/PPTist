@@ -1,5 +1,19 @@
 import request from "@/api/apiConfig";
 
+export function newUploadFile(file: any) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return request<{ full_path: string; path: string }>({
+    url: "/mgr/textbook_courseware/upload_file/",
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    method: "POST",
+    data: formData,
+  });
+}
+
 export function uploadFile(file: any) {
   const formData = new FormData();
   formData.append("file", file);

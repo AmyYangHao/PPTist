@@ -192,6 +192,8 @@ const onSave = async () => {
     return ElMessage.error("课程ID不存在");
   }
   Bus.$emit("TOGGLE_LOADING_STATUS", true);
+  console.log("asdw", content);
+
   try {
     const resp = await apiCourse.update({
       id: +courseId,
