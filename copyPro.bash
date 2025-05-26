@@ -35,5 +35,4 @@ for folder in "${TARGET_FOLDERS[@]}"; do
     echo "警告：项目A中不存在 $folder 文件夹"
   fi
 done
-
 echo "操作完成！已处理文件夹: ${TARGET_FOLDERS[@]}"
