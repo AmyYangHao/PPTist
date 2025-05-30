@@ -2,8 +2,9 @@
   <div class="pptist-editor">
     <EditorHeader class="layout-header" :isEdit="isEdit" />
     <div class="layout-content">
-      <Thumbnails class="layout-content-left" />
-      <div class="layout-content-center">
+      <Thumbnails class="layout-content-left" :isEdit="isEdit" />
+      <div class="layout-content-center" :class="{ preview: !isEdit }">
+        <div v-if="!isEdit" class="mask" @click.stop=""></div>
         <CanvasTool class="center-top" />
         <Canvas
           class="center-body"
@@ -116,9 +117,9 @@ usePasteEvent();
     background: transparent;
     position: absolute;
     left: 0;
-    z-index: 9999;
+    z-index: 10;
+    pointer-events: visible;
   }
-
   .center-top {
     height: 52px;
   }

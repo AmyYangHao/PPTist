@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-header">
+  <div class="editor-header" v-if="isEdit">
     <div class="left">
       <Popover
         trigger="click"
@@ -148,6 +148,9 @@ import { ElMessage } from "element-plus";
 import Bus from "@likg/bus";
 import iconPlaySrc from "@/assets/icon/play.png";
 import iconSaveSrc from "@/assets/icon/save.png";
+defineProps<{
+  isEdit: boolean;
+}>();
 
 const mainStore = useMainStore();
 const slidesStore = useSlidesStore();
