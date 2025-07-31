@@ -1,46 +1,57 @@
 <template>
   <div class="mobile-preview" ref="mobileRef">
     <div class="thumbnail-list">
-      <div class="thumbnail-item" v-for="(slide, index) in slides" :key="slide.id">
-        <ThumbnailSlide 
-          :slide="slide" 
-          :size="screenWidth - 20" 
-          :visible="index < slidesLoadLimit" 
+      <div
+        class="thumbnail-item"
+        v-for="(slide, index) in slides"
+        :key="slide.id"
+      >
+        <ThumbnailSlide
+          :slide="slide"
+          :size="screenWidth - 20"
+          :visible="index < slidesLoadLimit"
         />
       </div>
     </div>
-    <div class="menu">
-      <div class="menu-item" @click="changeMode('editor')"><IconEdit class="icon" /> 编辑</div>
-      <Divider type="vertical" style="height: 30px;" />
-      <div class="menu-item" @click="changeMode('player')"><IconFullScreenPlay class="icon" /> 播放</div>
+    <div class="menu" v-if="isEdit == true">
+      <div class="menu-item" @click="changeMode('editor')">
+        <IconEdit class="icon" /> 编辑
+      </div>
+      <Divider type="vertical" style="height: 30px" />
+      <div class="menu-item" @click="changeMode('player')">
+        <IconFullScreenPlay class="icon" /> 播放
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useSlidesStore } from '@/store'
-import useLoadSlides from '@/hooks/useLoadSlides'
-import type { Mode } from '@/types/mobile'
+import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useSlidesStore } from "@/store";
+import useLoadSlides from "@/hooks/useLoadSlides";
+import type { Mode } from "@/types/mobile";
+import useQuery from "@/hooks/useQuery";
 
-import ThumbnailSlide from '@/views/components/ThumbnailSlide/index.vue'
-import Divider from '@/components/Divider.vue'
+import ThumbnailSlide from "@/views/components/ThumbnailSlide/index.vue";
+import Divider from "@/components/Divider.vue";
+const t = useQuery<string>("t");
+const isEdit = t !== "preview";
 
 defineProps<{
-  changeMode: (mode: Mode) => void
-}>()
+  changeMode: (mode: Mode) => void;
+}>();
 
-const { slides } = storeToRefs(useSlidesStore())
-const { slidesLoadLimit } = useLoadSlides()
+const { slides } = storeToRefs(useSlidesStore());
+const { slidesLoadLimit } = useLoadSlides();
 
-const mobileRef = ref<HTMLElement>()
-const screenWidth = ref(0)
+const mobileRef = ref<HTMLElement>();
+const screenWidth = ref(0);
 
 onMounted(() => {
-  if (!mobileRef.value) return
-  screenWidth.value = mobileRef.value.clientWidth
-})
+  if (!mobileRef.value) return;
+  screenWidth.value = mobileRef.value.clientWidth;
+});
 </script>
 
 <style lang="scss" scoped>
