@@ -121,12 +121,13 @@ const getCourseDetails = async (
     const uriResponse = await apiCourse.details(id || courseId);
 
     if (uriResponse && uriResponse.code === 200 && uriResponse.data) {
-      const url = import.meta.env.DEV
-        ? uriResponse.data?.replace(
-            "https://xingzhe-web-test.s3.cn-northwest-1.amazonaws.com.cn",
-            ""
-          )
-        : uriResponse.data;
+      // const url = import.meta.env.DEV
+      //   ? uriResponse.data?.replace(
+      //       "https://xingzhe-web-test.s3.cn-northwest-1.amazonaws.com.cn",
+      //       ""
+      //     )
+      //   : uriResponse.data;
+      let url = uriResponse.data
       axios
         .get(url, { responseType: "text" })
         .then((ctResponse) => {
@@ -374,7 +375,7 @@ window.addEventListener("message", (event: MessageEvent<PostMsgType>) => {
       const tk = localStorage.getItem("AUTHORIZATION_TOKEN") || "";
       slidesStore.setTitle(data?.title);
       getCourseDetails(tk, data?.id, (slide) => {
-        exportPPTX(slide, true, true);
+        exportPPTX(slide, true, false);
       });
     }
     // 这种全屏处理是因为iframe嵌入的页面在父级页面中操作iframe无法让子级页面全屏（必须由子页面产生交互），

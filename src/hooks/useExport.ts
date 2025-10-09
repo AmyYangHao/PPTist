@@ -830,7 +830,7 @@ export default () => {
           pptxSlide.addImage(options)
         }
 
-        else if (!ignoreMedia && (el.type === 'video' || el.type === 'audio')) {
+        else if (ignoreMedia == false && (el.type === 'video' || el.type === 'audio')) {
           const options: pptxgen.MediaProps = {
             x: el.left / ratioPx2Inch.value,
             y: el.top / ratioPx2Inch.value,
