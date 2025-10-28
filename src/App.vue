@@ -127,7 +127,7 @@ const getCourseDetails = async (
       //       ""
       //     )
       //   : uriResponse.data;
-      let url = uriResponse.data
+      let url = uriResponse.data;
       axios
         .get(url, { responseType: "text" })
         .then((ctResponse) => {
@@ -139,126 +139,139 @@ const getCourseDetails = async (
             // -- 将 JSON 字符串解析为对象
             const jsonObj = JSON.parse(ct);
             // -- 遍历 JSON 对象并进行替换
-            jsonObj.forEach((item: { elements: Array<any> }) => {
-              item.elements.forEach(
-                (element: { src: string; type: string }) => {
-                  if (element.type === "iframe") {
-                    console.log("element.src 修改前 >>> ", element.src);
-                    // -- 避免token过期，每次重渲染时替换之前嵌入的token
-                    element.src = element.src.replace("tk=", "token=");
-                    element.src = element.src.replace(
-                      /(token=)([^"]+)/g,
-                      (_, $2) => `${$2}${tk}`
-                    );
-                    element.src = element.src.replace("/integration?", "/ppt?");
-                    // -- 按插入模块兼容老数据
-                    const params = new URLSearchParams(
-                      element.src.split("?")[1]
-                    );
+            jsonObj.forEach(
+              (item: {
+                pptWidth: number | undefined;
+                elements: Array<any>;
+              }) => {
+                if (item.pptWidth !== undefined) {
+                  slidesStore.setViewportSize((item.pptWidth * 96) / 72);
+                  // Refer: useImport.ts --> Line 216: let ratio = 96 / 72
+                }
 
-                    // -- 百科
-                    if (element.src.includes("type=baike")) {
-                      const kind = params.get("kind");
+                item.elements.forEach(
+                  (element: { src: string; type: string }) => {
+                    if (element.type === "iframe") {
+                      console.log("element.src 修改前 >>> ", element.src);
+                      // -- 避免token过期，每次重渲染时替换之前嵌入的token
+                      element.src = element.src.replace("tk=", "token=");
                       element.src = element.src.replace(
-                        "type=baike",
-                        kind === "1" ? "q=instrument" : "q=musician"
+                        /(token=)([^"]+)/g,
+                        (_, $2) => `${$2}${tk}`
                       );
-                    }
-                    // -- 教材欣赏
-                    else if (element.src.includes("/song?")) {
                       element.src = element.src.replace(
-                        "/song?",
-                        "/ppt?q=song&"
+                        "/integration?",
+                        "/ppt?"
                       );
-                    }
-                    // -- 音基训练·节奏训练
-                    else if (element.src.includes("type=beat")) {
-                      element.src = element.src.replace(
-                        "type=beat",
-                        "q=train_rhythm"
+                      // -- 按插入模块兼容老数据
+                      const params = new URLSearchParams(
+                        element.src.split("?")[1]
                       );
-                    }
-                    // -- 音基训练·音高训练
-                    else if (element.src.includes("type=pitch")) {
-                      const id = params.get("id");
-                      element.src = element.src.replace(/id=\d&/, "");
-                      if (id === "1") {
-                        // -- 模唱训练
+
+                      // -- 百科
+                      if (element.src.includes("type=baike")) {
+                        const kind = params.get("kind");
                         element.src = element.src.replace(
-                          "type=pitch",
-                          "q=train_pitch_imitation"
-                        );
-                      } else if (id === "2") {
-                        // -- 构唱训练
-                        element.src = element.src.replace(
-                          "type=pitch",
-                          "q=train_pitch_composition"
-                        );
-                      } else if (id === "3") {
-                        // -- 听音训练
-                        element.src = element.src.replace(
-                          "type=pitch",
-                          "q=train_pitch_ear"
+                          "type=baike",
+                          kind === "1" ? "q=instrument" : "q=musician"
                         );
                       }
-                    }
-                    // -- 音基训练·趣味识谱
-                    else if (element.src.includes("type=basic")) {
-                      element.src = element.src.replace(
-                        "type=basic",
-                        "q=train_fun_sheet_music"
-                      );
-                    }
-                    // -- 互动编创
-                    else if (element.src.includes("type=chuang")) {
-                      element.src = element.src.replace(
-                        "type=chuang",
-                        "q=interactive_creation"
-                      );
-                    }
-                    // -- 自由编创
-                    else if (element.src.includes("type=musicScore")) {
-                      element.src = element.src.replace(
-                        "type=musicScore",
-                        "q=free_creation"
-                      );
-                    }
-                    // -- AI作词
-                    else if (element.src.includes("type=lyric")) {
-                      element.src = element.src.replace("style=rock&", "");
-                      element.src = element.src.replace(
-                        "type=lyric",
-                        "q=ai_lyrics"
-                      );
-                    }
-                    // -- AI作曲（诗歌作曲）
-                    else if (element.src.includes("type=proty")) {
-                      element.src = element.src.replace(
-                        "type=proty",
-                        "q=ai_composition"
-                      );
-                    }
-                    // -- 自定义编创
-                    else if (element.src.includes("type=custom-compose")) {
-                      element.src = element.src.replace(
-                        "type=custom-compose",
-                        "q=custom_compose_music"
-                      );
-                    }
+                      // -- 教材欣赏
+                      else if (element.src.includes("/song?")) {
+                        element.src = element.src.replace(
+                          "/song?",
+                          "/ppt?q=song&"
+                        );
+                      }
+                      // -- 音基训练·节奏训练
+                      else if (element.src.includes("type=beat")) {
+                        element.src = element.src.replace(
+                          "type=beat",
+                          "q=train_rhythm"
+                        );
+                      }
+                      // -- 音基训练·音高训练
+                      else if (element.src.includes("type=pitch")) {
+                        const id = params.get("id");
+                        element.src = element.src.replace(/id=\d&/, "");
+                        if (id === "1") {
+                          // -- 模唱训练
+                          element.src = element.src.replace(
+                            "type=pitch",
+                            "q=train_pitch_imitation"
+                          );
+                        } else if (id === "2") {
+                          // -- 构唱训练
+                          element.src = element.src.replace(
+                            "type=pitch",
+                            "q=train_pitch_composition"
+                          );
+                        } else if (id === "3") {
+                          // -- 听音训练
+                          element.src = element.src.replace(
+                            "type=pitch",
+                            "q=train_pitch_ear"
+                          );
+                        }
+                      }
+                      // -- 音基训练·趣味识谱
+                      else if (element.src.includes("type=basic")) {
+                        element.src = element.src.replace(
+                          "type=basic",
+                          "q=train_fun_sheet_music"
+                        );
+                      }
+                      // -- 互动编创
+                      else if (element.src.includes("type=chuang")) {
+                        element.src = element.src.replace(
+                          "type=chuang",
+                          "q=interactive_creation"
+                        );
+                      }
+                      // -- 自由编创
+                      else if (element.src.includes("type=musicScore")) {
+                        element.src = element.src.replace(
+                          "type=musicScore",
+                          "q=free_creation"
+                        );
+                      }
+                      // -- AI作词
+                      else if (element.src.includes("type=lyric")) {
+                        element.src = element.src.replace("style=rock&", "");
+                        element.src = element.src.replace(
+                          "type=lyric",
+                          "q=ai_lyrics"
+                        );
+                      }
+                      // -- AI作曲（诗歌作曲）
+                      else if (element.src.includes("type=proty")) {
+                        element.src = element.src.replace(
+                          "type=proty",
+                          "q=ai_composition"
+                        );
+                      }
+                      // -- 自定义编创
+                      else if (element.src.includes("type=custom-compose")) {
+                        element.src = element.src.replace(
+                          "type=custom-compose",
+                          "q=custom_compose_music"
+                        );
+                      }
 
-                    console.log("sdfkjherjkglh", element.src);
+                      console.log("sdfkjherjkglh", element.src);
 
-                    // -- 修改域名
-                    element.src = replaceDomain(
-                      element.src + "&hide_side_bar=1",
-                      import.meta.env.VITE_PLATFORM_HOST
-                    );
-                    console.log("sdfkjherjkglh", element.src);
-                    console.log("element.src 修改后 >>> ", element.src);
+                      // -- 修改域名
+                      element.src = replaceDomain(
+                        element.src + "&hide_side_bar=1",
+                        import.meta.env.VITE_PLATFORM_HOST
+                      );
+                      console.log("sdfkjherjkglh", element.src);
+                      console.log("element.src 修改后 >>> ", element.src);
+                    }
                   }
-                }
-              );
-            });
+                );
+              }
+            );
             const jsonStr = JSON.stringify(jsonObj);
             console.log("jsonStr  >>>>> ", jsonStr);
             slides.value = JSON.parse(jsonStr);

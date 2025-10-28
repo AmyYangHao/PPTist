@@ -743,6 +743,7 @@ export interface Slide {
   turningMode?: TurningMode
   sectionTag?: SectionTag
   type?: SlideType
+  pptWidth: number
 }
 
 /**

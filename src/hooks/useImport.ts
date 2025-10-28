@@ -169,13 +169,11 @@ export default () => {
   }
 
   const getFileUrl = async (el: any, type: string) => {
-    let file = await blobUrlToFile((el.blob || el.src), type)
-    console.log(file);
-
-    const resp = await apiCommon.newUploadFile(file);
-    let url = ""
+    const file = await blobUrlToFile((el.blob || el.src), type)
+    const resp = await apiCommon.newUploadFile(file)
+    let url = ''
     if (resp.code === 200) {
-      url = resp.data.full_path;
+      url = resp.data.full_path
     }
     return url
   }
@@ -259,6 +257,7 @@ export default () => {
           elements: [],
           background,
           remark: item.note || '',
+          pptWidth: width,
         }
 
         const parseElements = async (elements: Element[]) => {
