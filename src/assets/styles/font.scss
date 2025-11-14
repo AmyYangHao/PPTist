@@ -1,10 +1,9 @@
-$fonts: 'SourceHanSans', 'SourceHanSerif', 'FangZhengHeiTi', 'FangZhengKaiTi', 'FangZhengShuSong', 'FangZhengFangSong', 'AlibabaPuHuiTi', 'ZhuQueFangSong', 'LXGWWenKai', 'WenDingPLKaiTi', 'DeYiHei', 'MiSans', 'CangerXiaowanzi', 'YousheTitleBlack', 'FengguangMingrui', 'ShetuModernSquare', 'ZcoolHappy', 'ZizhiQuXiMai', 'SucaiJishiKangkang', 'SucaiJishiCoolSquare', 'TuniuRounded', 'RuiziZhenyan';
+$fonts: 'SourceHanSans-yquDYLED', 'SourceHanSerif-BepnSM6I', 'FangZhengHeiTi-CxvR-3vx', 'FangZhengKaiTi-Bg4AoH2e', 'FangZhengShuSong-BoLlmUpO', 'FangZhengFangSong-i331GLcV', 'AlibabaPuHuiTi-DmhZZWZO', 'ZhuQueFangSong-DEfOC7qi', 'LXGWWenKai-DZFs0NHN', 'WenDingPLKaiTi-B5NXxUeg', 'DeYiHei-Cv0cLOfB', 'MiSans-AGu9P6z3', 'CangerXiaowanzi-DMeiPcG1', 'YousheTitleBlack-DvsoQD-n', 'FengguangMingrui-ksNOhX5g', 'ShetuModernSquare-FPQ-Yk8S', 'ZcoolHappy-Bl-VMWXg', 'ZizhiQuXiMai-Cm-DfYJC', 'SucaiJishiKangkang-DybiDsGh', 'SucaiJishiCoolSquare-D6FYeh6', 'TuniuRounded-Cg3Uf6es', 'RuiziZhenyan-BHKInSJR';
 
 @each $font in $fonts {
   @font-face {
     font-display: swap;
     font-family: $font;
     src: url('https://pipipi-pikachu.github.io/PPTist/assets/#{$font}.woff2') format('woff2');
-
   }
 }
