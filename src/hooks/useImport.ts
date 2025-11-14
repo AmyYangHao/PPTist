@@ -273,6 +273,8 @@ export default () => {
             el.height = el.height * ratio
             el.left = el.left * ratio
             el.top = el.top * ratio
+            console.log("zxc", el, el.type);
+
 
             if (el.type === 'text') {
               const textEl: PPTTextElement = {
