@@ -396,7 +396,6 @@ export default () => {
                 rotate: 0,
                 autoplay: false,
               })
-              // })
             }
             else if (el.type === 'shape') {
               if (el.shapType === 'line' || /Connector/.test(el.shapType)) {
