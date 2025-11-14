@@ -159,18 +159,76 @@ export default () => {
 
     return { x: graphicX, y: graphicY }
   }
-  async function blobUrlToFile(blobUrl: string, type: string, minitype: string) {
+  async function blobUrlToFile(blobUrl: string): Promise<File> {
+    const mimeToExt: Record<string, string> = {
+      'audio/mpeg': 'mp3',
+      'audio/mp3': 'mp3',
+      'audio/ogg': 'ogg',
+      'audio/wav': 'wav',
+      'video/mp4': 'mp4',
+      'video/webm': 'webm',
+      'image/png': 'png',
+      'image/jpeg': 'jpg',
+      'image/jpg': 'jpg',
+      'image/gif': 'gif',
+      'application/pdf': 'pdf',
+    }
+    const extToMime: Record<string, string> = Object.fromEntries(
+      Object.entries(mimeToExt).map(([m, e]) => [e, m])
+    )
+
+    // handle data URLs directly
+    if (blobUrl.startsWith('data:')) {
+      const meta = /^data:([^;]+);base64,/.exec(blobUrl)
+      const mime = meta ? meta[1] : 'application/octet-stream'
+      const ext = mimeToExt[mime] || mime.split('/').pop() || 'bin'
+      const base64 = blobUrl.split(',')[1] || ''
+      const u8 = Uint8Array.from(atob(base64), c => c.charCodeAt(0))
+      const fileName = `file-${Date.now()}.${ext}`
+      const blob = new Blob([u8], { type: mime })
+      return new File([blob], fileName, { type: mime })
+    }
+
+    // fetch the resource
     const response = await fetch(blobUrl)
     const blob = await response.blob()
 
-    // 提取文件名（或自定义）
-    const fileName = `video-${Date.now()}.${type}`
+    // try to determine mime and extension
+    let mime = blob.type || ''
+    let ext = ''
 
-    return new File([blob], fileName, { type: minitype })
+    // try from URL path
+    try {
+      const url = new URL(blobUrl, typeof location !== 'undefined' ? location.href : undefined)
+      const pathName = url.pathname
+      const nameCandidate = pathName.split('/').pop() || ''
+      const m = nameCandidate.match(/\.([a-zA-Z0-9]+)(?:$|\?|\#)/)
+      if (m) ext = m[1].toLowerCase()
+    } catch {
+      // ignore
+    }
+
+    if (!ext && mime) ext = mimeToExt[mime] || mime.split('/').pop() || ''
+    if (!mime && ext) mime = extToMime[ext] || ''
+    if (!ext) ext = 'bin'
+    if (!mime) mime = 'application/octet-stream'
+
+    // try to derive a sensible file name from the URL
+    let fileName = ''
+    try {
+      const url = new URL(blobUrl, typeof location !== 'undefined' ? location.href : undefined)
+      fileName = decodeURIComponent((url.pathname.split('/').pop() || '').split('?')[0].split('#')[0])
+    } catch {
+      // ignore
+    }
+    if (!fileName) fileName = `file-${Date.now()}.${ext}`
+    else if (!/\.[a-zA-Z0-9]+$/.test(fileName)) fileName = `${fileName}.${ext}`
+
+    return new File([blob], fileName, { type: mime })
   }
 
-  const getFileUrl = async (el: any, type: string, minitype: string) => {
-    const file = await blobUrlToFile((el.blob || el.src), type, minitype)
+  const getFileUrl = async (el: any) => {
+    const file = await blobUrlToFile((el.blob || el.src))
     console.log("hehe upload file", file);
     const resp = await apiCommon.newUploadFile(file)
     let url = ''
@@ -365,7 +423,7 @@ export default () => {
               })
             }
             else if (el.type === 'audio') {
-              let url = await getFileUrl(el, "mp3", "audio/mp3");
+              let url = await getFileUrl(el);
               console.log(el, url);
               slide.elements.push({
                 type: 'audio',
@@ -383,7 +441,7 @@ export default () => {
               })
             }
             else if (el.type === 'video') {
-              let url = await getFileUrl(el, "mp4", "video/mp4");
+              let url = await getFileUrl(el);
 
               console.log(el, url);
               slide.elements.push({
