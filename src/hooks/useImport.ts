@@ -171,6 +171,7 @@ export default () => {
 
   const getFileUrl = async (el: any, type: string, minitype: string) => {
     const file = await blobUrlToFile((el.blob || el.src), type, minitype)
+    console.log("hehe upload file", file);
     const resp = await apiCommon.newUploadFile(file)
     let url = ''
     if (resp.code === 200) {
@@ -364,7 +365,7 @@ export default () => {
               })
             }
             else if (el.type === 'audio') {
-              let url = await getFileUrl(el, "audio/mp3", "mp3");
+              let url = await getFileUrl(el, "mp3", "audio/mp3");
               console.log(el, url);
               slide.elements.push({
                 type: 'audio',
@@ -382,7 +383,7 @@ export default () => {
               })
             }
             else if (el.type === 'video') {
-              let url = await getFileUrl(el, "video/mp4", "mp4");
+              let url = await getFileUrl(el, "mp4", "video/mp4");
 
               console.log(el, url);
               slide.elements.push({
