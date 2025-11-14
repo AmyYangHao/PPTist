@@ -28,6 +28,7 @@ import type {
 import { getElementListRange } from '@/utils/element'
 import { apiCommon } from '@/api/apiServer'
 import { Setting } from '@icon-park/vue-next'
+import { min } from 'lodash'
 
 const convertFontSizePtToPx = (html: string, ratio: number) => {
   return html.replace(/font-size:\s*([\d.]+)pt/g, (match, p1) => {
@@ -158,18 +159,18 @@ export default () => {
 
     return { x: graphicX, y: graphicY }
   }
-  async function blobUrlToFile(blobUrl: string, type: string) {
-    const response = await fetch(blobUrl);
-    const blob = await response.blob();
+  async function blobUrlToFile(blobUrl: string, type: string, minitype: string) {
+    const response = await fetch(blobUrl)
+    const blob = await response.blob()
 
     // 提取文件名（或自定义）
-    const fileName = `video-${Date.now()}.${blob.type.split('/')[1] || type}`;
+    const fileName = `video-${Date.now()}.${type}`
 
-    return new File([blob], fileName, { type: blob.type });
+    return new File([blob], fileName, { type: minitype })
   }
 
-  const getFileUrl = async (el: any, type: string) => {
-    const file = await blobUrlToFile((el.blob || el.src), type)
+  const getFileUrl = async (el: any, type: string, minitype: string) => {
+    const file = await blobUrlToFile((el.blob || el.src), type, minitype)
     const resp = await apiCommon.newUploadFile(file)
     let url = ''
     if (resp.code === 200) {
@@ -189,8 +190,6 @@ export default () => {
 
     const file = files[0]
     if (!file) return
-
-    console.log("lkrgfjh", file);
 
     exporting.value = true
 
@@ -262,7 +261,7 @@ export default () => {
 
         const parseElements = async (elements: Element[]) => {
           const sortedElements = elements.sort((a, b) => a.order - b.order)
-
+          console.log("zxc", sortedElements);
           for (const el of sortedElements) {
             const originWidth = el.width || 1
             const originHeight = el.height || 1
@@ -273,7 +272,6 @@ export default () => {
             el.height = el.height * ratio
             el.left = el.left * ratio
             el.top = el.top * ratio
-            console.log("zxc", el, el.type);
 
 
             if (el.type === 'text') {
@@ -366,7 +364,7 @@ export default () => {
               })
             }
             else if (el.type === 'audio') {
-              let url = await getFileUrl(el, "mp3");
+              let url = await getFileUrl(el, "audio/mp3", "mp3");
               console.log(el, url);
               slide.elements.push({
                 type: 'audio',
@@ -384,7 +382,7 @@ export default () => {
               })
             }
             else if (el.type === 'video') {
-              let url = await getFileUrl(el, "mp4");
+              let url = await getFileUrl(el, "video/mp4", "mp4");
 
               console.log(el, url);
               slide.elements.push({
