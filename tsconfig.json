@@ -7,5 +7,10 @@
     {
       "path": "./tsconfig.app.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "paths": {
+      "pptxtojson": ["./src/components/xzpptxtojson/index.d.ts"]
+    }
+  }
 }
