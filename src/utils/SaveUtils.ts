@@ -8,18 +8,18 @@ import { ElMessage } from "element-plus";
 export async function savePPTtoS3(id: number, content: string, cover_url: string) {
     let name = `courseware_${id}.txt`
     const response = await apiCourse.getS3Url({
+        code: "PPT_JSON",
         name
     });
     if (response && response.code === 200) {
         const { presign_url, full_path } = response.data;
         const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
         const file = new File([blob], name, { type: "text/plain" });
-        console.log(presign_url, file);
         fetch(presign_url, {
             method: "PUT",
             body: file,
             headers: {
-                "Content-Type": "text/plain"
+                "Content-Type": "text/plain; charset=utf-8"
             }
         })
             .then((uploadRes) => {

@@ -162,9 +162,9 @@ export default () => {
     const blob = await response.blob()
 
     // 提取文件名（或自定义）
-    const fileName = `xingzheai-${Date.now()}.${type}`
+    const fileName = `xingzheai-${Date.now()}.${minitype}`
 
-    return new File([blob], fileName, { type: minitype })
+    return new File([blob], fileName, { type: type })
   }
 
   const getFileUrl = async (el: any, type: string, minitype: string) => {
