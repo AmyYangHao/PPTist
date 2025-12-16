@@ -306,7 +306,9 @@ const saveComplete = (complete: boolean) => {
 const onSave = async () => {
   // loading.value = true;
   const content = JSON.stringify(slides.value);
-  const hasIfr = slides.value[0].elements.some((ele) => ele.type === "iframe");
+  const hasIfr = slides.value[0].elements.some(
+    (ele: any) => ele.type === "iframe"
+  );
 
   let cover_url = defaultCover;
   if (!hasIfr) {
@@ -344,10 +346,10 @@ const onSave = async () => {
 };
 
 // -- 临时代码 start
-// const tk =
-//   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NjA4NjAzLCJpYXQiOjE3NDU3NDQ2MDMsImp0aSI6IjM2NzAwZmQ3Y2Q2ZDQ3NWRiZmRhYWI1YzIwMTRmZWI4IiwidXNlcl9pZCI6OTc1fQ.7C-GJEqZC9RkPpZK_nqcCzU1A8Aevf1EsSvNqzmmkVk";
-// localStorage.setItem("AUTHORIZATION_TOKEN", tk);
-// getCourseDetails(tk);
+const tk =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MzgyOTU4LCJpYXQiOjE3NjU1MTg5NTgsImp0aSI6IjRiZTgwNThjN2FlMTQxMjQ4MTA4ZjNkNjdiNWExMDhjIiwidXNlcl9pZCI6OTc1fQ.pVGIT4fy0GPI4jQHWQGdbos0kNqnx9_nE_SOeQ6jwbY";
+localStorage.setItem("AUTHORIZATION_TOKEN", tk);
+getCourseDetails(tk);
 // -- 临时代码 end
 
 // -- 监听发送过来的消息

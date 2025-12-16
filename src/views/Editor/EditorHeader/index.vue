@@ -146,6 +146,7 @@ import { base64ToFile } from "@/utils/helper";
 import { apiCommon, apiCourse } from "@/api/apiServer";
 import { ElMessage } from "element-plus";
 import Bus from "@likg/bus";
+import { savePPTtoS3 } from "@/utils/SaveUtils";
 import iconPlaySrc from "@/assets/icon/play.png";
 import iconSaveSrc from "@/assets/icon/save.png";
 defineProps<{
@@ -174,9 +175,9 @@ const startEditTitle = () => {
 };
 const onSave = async () => {
   const content = JSON.stringify(slides.value);
-  console.log(content);
-
-  const hasIfr = slides.value[0].elements.some((ele) => ele.type === "iframe");
+  const hasIfr = slides.value[0].elements.some(
+    (ele: any) => ele.type === "iframe"
+  );
   console.log(hasIfr);
 
   let cover_url = defaultCover;
@@ -198,15 +199,11 @@ const onSave = async () => {
   console.log("asdw", content);
 
   try {
-    const resp = await apiCourse.update({
-      id: +courseId,
-      content,
-      cover_url,
-    });
-    Bus.$emit("TOGGLE_LOADING_STATUS", false);
-    if (resp && resp.code === 200) {
-      ElMessage.success("保存成功");
-    }
+    savePPTtoS3(+courseId, content, cover_url);
+    // Bus.$emit("TOGGLE_LOADING_STATUS", false);
+    // if (resp && resp.code === 200) {
+    //   ElMessage.success("保存成功");
+    // }
   } catch (error) {
     Bus.$emit("TOGGLE_LOADING_STATUS", false);
     console.log(error);

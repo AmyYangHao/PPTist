@@ -1,3 +1,4 @@
+/* eslint-disable */
 import request from "@/api/apiConfig";
 
 interface UpdateParams {
@@ -8,10 +9,24 @@ interface UpdateParams {
    */
   cover_url: string;
 }
-
 export function update(data: UpdateParams) {
   return request({
     url: "/mgr/textbook_courseware/update_content/",
+    data,
+    method: "POST"
+  });
+}
+export function updateUrl(data: any) {
+  return request({
+    url: "/mgr/textbook_courseware/update_content_url/",
+    data,
+    method: "POST"
+  });
+}
+
+export function getS3Url(data: any) {
+  return request({
+    url: "/api/presign_url",
     data,
     method: "POST"
   });
