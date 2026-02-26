@@ -108,7 +108,7 @@ export const interactionTemplate = [
     component: AiLyrics,
   },
   {
-    label: "AI作曲",
+    label: "诗歌作曲",
     id: 7,
     component: AiComposition,
   },
